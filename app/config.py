@@ -10,8 +10,8 @@ class Config(BaseSettings):
     KEYCLOAK_REALM: str
     KEYCLOAK_URL: str
 
-    # SOIL-API settings
-    SOIL_API_URL: str  # Full path to the Soil API (eg: http://soil-api-dev)
+    # MACE-API settings
+    MACE_API_URL: str  # Full path to the MACE API (eg: http://mace-api-dev)
 
 
 @lru_cache()

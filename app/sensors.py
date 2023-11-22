@@ -19,7 +19,7 @@ async def get_sensor(
     """Get a sensor by id"""
 
     res = await client.get(
-        f"{config.SOIL_API_URL}/v1/sensors/{sensor_id}",
+        f"{config.MACE_API_URL}/v1/sensors/{sensor_id}",
     )
 
     return res.json()
@@ -37,7 +37,7 @@ async def get_sensors(
     """Get all sensors"""
 
     res = await client.get(
-        f"{config.SOIL_API_URL}/v1/sensors",
+        f"{config.MACE_API_URL}/v1/sensors",
         params={"sort": sort, "range": range, "filter": filter},
     )
     response.headers["Access-Control-Expose-Headers"] = "Content-Range"
@@ -55,7 +55,23 @@ async def create_sensor(
     """Creates an sensor"""
 
     res = await client.post(
-        f"{config.SOIL_API_URL}/v1/sensors",
+        f"{config.MACE_API_URL}/v1/sensors",
+        json=sensor,
+    )
+
+    return res.json()
+
+
+@router.post("")
+async def create_many_sensors(
+    sensor: Any = Body(...),
+    client: httpx.AsyncClient = Depends(get_async_client),
+    user: User = Depends(require_admin),
+) -> Any:
+    """Creates an sensor"""
+
+    res = await client.post(
+        f"{config.MACE_API_URL}/v1/sensors/many",
         json=sensor,
     )
 
@@ -72,7 +88,7 @@ async def update_sensor(
     """ "Updates an sensor by id"""
 
     res = await client.put(
-        f"{config.SOIL_API_URL}/v1/sensors/{sensor_id}", json=sensor
+        f"{config.MACE_API_URL}/v1/sensors/{sensor_id}", json=sensor
     )
 
     return res.json()
@@ -86,6 +102,6 @@ async def delete_sensor(
 ) -> None:
     """Delete an sensor by id"""
 
-    res = await client.delete(f"{config.SOIL_API_URL}/v1/sensors/{sensor_id}")
+    res = await client.delete(f"{config.MACE_API_URL}/v1/sensors/{sensor_id}")
 
     return res.json()

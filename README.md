@@ -1,5 +1,5 @@
-# sensormap-bff
-The backend-for-frontend for sensormap
+# macemap-bff
+The backend-for-frontend for macemap
 
 
 ## Getting started
