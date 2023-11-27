@@ -10,23 +10,23 @@ from app.auth import require_admin
 router = APIRouter()
 
 
-@router.get("/{area_id}")
-async def get_area(
+@router.get("/{site_id}")
+async def get_site(
     client: httpx.AsyncClient = Depends(get_async_client),
     *,
-    area_id: UUID,
+    site_id: UUID,
 ) -> Any:
-    """Get an area by id"""
+    """Get a site by id"""
 
     res = await client.get(
-        f"{config.MACE_API_URL}/v1/areas/{area_id}",
+        f"{config.MACE_API_URL}/v1/sites/{site_id}",
     )
 
     return res.json()
 
 
 @router.get("")
-async def get_areas(
+async def get_sites(
     request: Request,
     response: Response,
     *,
@@ -35,9 +35,9 @@ async def get_areas(
     range: str = None,
     client: httpx.AsyncClient = Depends(get_async_client),
 ) -> Any:
-    """Get all areas"""
+    """Get all sites"""
     res = await client.get(
-        f"{config.MACE_API_URL}/v1/areas",
+        f"{config.MACE_API_URL}/v1/sites",
         params={"sort": sort, "range": range, "filter": filter},
     )
     response.headers["Access-Control-Expose-Headers"] = "Content-Range"
@@ -47,45 +47,45 @@ async def get_areas(
 
 
 @router.post("")
-async def create_area(
-    area: Any = Body(...),
+async def create_site(
+    site: Any = Body(...),
     client: httpx.AsyncClient = Depends(get_async_client),
     user: User = Depends(require_admin),
 ) -> Any:
-    """Creates an area"""
+    """Creates a site"""
 
     res = await client.post(
-        f"{config.MACE_API_URL}/v1/areas",
-        json=area,
+        f"{config.MACE_API_URL}/v1/sites",
+        json=site,
     )
 
     return res.json()
 
 
-@router.put("/{area_id}")
-async def update_area(
-    area_id: UUID,
-    area: Any = Body(...),
+@router.put("/{site_id}")
+async def update_site(
+    site_id: UUID,
+    site: Any = Body(...),
     client: httpx.AsyncClient = Depends(get_async_client),
     user: User = Depends(require_admin),
 ) -> Any:
-    """ "Updates an area by id"""
+    """ "Updates a site by id"""
 
     res = await client.put(
-        f"{config.MACE_API_URL}/v1/areas/{area_id}", json=area
+        f"{config.MACE_API_URL}/v1/sites/{site_id}", json=site
     )
 
     return res.json()
 
 
-@router.delete("/{area_id}")
-async def delete_area(
-    area_id: UUID,
+@router.delete("/{site_id}")
+async def delete_site(
+    site_id: UUID,
     client: httpx.AsyncClient = Depends(get_async_client),
     user: User = Depends(require_admin),
 ) -> None:
-    """Delete an area by id"""
+    """Delete an site by id"""
 
-    res = await client.delete(f"{config.MACE_API_URL}/v1/areas/{area_id}")
+    res = await client.delete(f"{config.MACE_API_URL}/v1/sites/{site_id}")
 
     return res.json()

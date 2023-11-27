@@ -3,9 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import config
 from app.models.config import KeycloakConfig
 from app.models.health import HealthCheck
-from app.areas import router as areas_router
-from app.sensors import router as sensors_router
-from app.sensordata import router as sensordata_router
+from app.sites import router as sites_router
+from app.fieldcampaigns import router as field_campaigns_router
 
 app = FastAPI()
 
@@ -47,17 +46,12 @@ def get_health() -> HealthCheck:
 
 
 app.include_router(
-    areas_router,
-    prefix=f"{config.API_PREFIX}/areas",
-    tags=["areas"],
+    sites_router,
+    prefix=f"{config.API_PREFIX}/sites",
+    tags=["sites"],
 )
 app.include_router(
-    sensors_router,
-    prefix=f"{config.API_PREFIX}/sensors",
-    tags=["sensors"],
-)
-app.include_router(
-    sensordata_router,
-    prefix=f"{config.API_PREFIX}/sensordata",
-    tags=["sensordata"],
+    field_campaigns_router,
+    prefix=f"{config.API_PREFIX}/fieldcampaigns",
+    tags=["fieldcampaigns"],
 )
