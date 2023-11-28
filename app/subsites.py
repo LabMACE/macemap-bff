@@ -10,23 +10,23 @@ from app.auth import require_admin
 router = APIRouter()
 
 
-@router.get("/{site_id}")
-async def get_site(
+@router.get("/{subsite_id}")
+async def get_subsite(
     client: httpx.AsyncClient = Depends(get_async_client),
     *,
-    site_id: UUID,
+    subsite_id: UUID,
 ) -> Any:
-    """Get a site by id"""
+    """Get a subsite by id"""
 
     res = await client.get(
-        f"{config.MACE_API_URL}/v1/sites/{site_id}",
+        f"{config.MACE_API_URL}/v1/subsites/{subsite_id}",
     )
 
     return res.json()
 
 
 @router.get("")
-async def get_sites(
+async def get_subsites(
     request: Request,
     response: Response,
     *,
@@ -35,9 +35,9 @@ async def get_sites(
     range: str = None,
     client: httpx.AsyncClient = Depends(get_async_client),
 ) -> Any:
-    """Get all sites"""
+    """Get all subsites"""
     res = await client.get(
-        f"{config.MACE_API_URL}/v1/sites",
+        f"{config.MACE_API_URL}/v1/subsites",
         params={"sort": sort, "range": range, "filter": filter},
     )
     response.headers["Access-Control-Expose-Headers"] = "Content-Range"
@@ -47,45 +47,47 @@ async def get_sites(
 
 
 @router.post("")
-async def create_site(
-    site: Any = Body(...),
+async def create_subsite(
+    subsite: Any = Body(...),
     client: httpx.AsyncClient = Depends(get_async_client),
     user: User = Depends(require_admin),
 ) -> Any:
-    """Creates a site"""
+    """Creates a subsite"""
     print(user)
     res = await client.post(
-        f"{config.MACE_API_URL}/v1/sites",
-        json=site,
+        f"{config.MACE_API_URL}/v1/subsites",
+        json=subsite,
     )
 
     return res.json()
 
 
-@router.put("/{site_id}")
-async def update_site(
-    site_id: UUID,
-    site: Any = Body(...),
+@router.put("/{subsite_id}")
+async def update_subsite(
+    subsite_id: UUID,
+    subsite: Any = Body(...),
     client: httpx.AsyncClient = Depends(get_async_client),
     user: User = Depends(require_admin),
 ) -> Any:
-    """ "Updates a site by id"""
+    """ "Updates a subsite by id"""
 
     res = await client.put(
-        f"{config.MACE_API_URL}/v1/sites/{site_id}", json=site
+        f"{config.MACE_API_URL}/v1/subsites/{subsite_id}", json=subsite
     )
 
     return res.json()
 
 
-@router.delete("/{site_id}")
-async def delete_site(
-    site_id: UUID,
+@router.delete("/{subsite_id}")
+async def delete_subsite(
+    subsite_id: UUID,
     client: httpx.AsyncClient = Depends(get_async_client),
     user: User = Depends(require_admin),
 ) -> None:
-    """Delete an site by id"""
+    """Delete an subsite by id"""
 
-    res = await client.delete(f"{config.MACE_API_URL}/v1/sites/{site_id}")
+    res = await client.delete(
+        f"{config.MACE_API_URL}/v1/subsites/{subsite_id}"
+    )
 
     return res.json()

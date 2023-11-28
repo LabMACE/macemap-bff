@@ -4,6 +4,7 @@ from app.config import config
 from app.models.config import KeycloakConfig
 from app.models.health import HealthCheck
 from app.sites import router as sites_router
+from app.subsites import router as subsites_router
 from app.fieldcampaigns import router as field_campaigns_router
 
 app = FastAPI()
@@ -49,6 +50,11 @@ app.include_router(
     sites_router,
     prefix=f"{config.API_PREFIX}/sites",
     tags=["sites"],
+)
+app.include_router(
+    subsites_router,
+    prefix=f"{config.API_PREFIX}/subsites",
+    tags=["subsites"],
 )
 app.include_router(
     field_campaigns_router,
