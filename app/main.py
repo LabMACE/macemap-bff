@@ -1,8 +1,10 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import config
 from app.models.config import KeycloakConfig
 from app.models.health import HealthCheck
+from app.utils import get_async_client
+import httpx
 from app.sites import router as sites_router
 from app.subsites import router as subsites_router
 from app.fieldcampaigns import router as field_campaigns_router
@@ -38,11 +40,20 @@ async def get_keycloak_config() -> KeycloakConfig:
     status_code=status.HTTP_200_OK,
     response_model=HealthCheck,
 )
-def get_health() -> HealthCheck:
+async def get_health(
+    client: httpx.AsyncClient = Depends(get_async_client),
+) -> HealthCheck:
     """Perform a Health Check
 
     Useful for Kubernetes to check liveness and readiness probes
     """
+
+    res = await client.get(f"{config.MACE_API_URL}/healthz")
+    res_json = res.json()
+
+    if res_json["status"] != "OK":
+        raise HTTPException(status_code=500)
+
     return HealthCheck(status="OK")
 
 
