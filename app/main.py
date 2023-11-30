@@ -7,6 +7,8 @@ from app.utils import get_async_client
 import httpx
 from app.sites import router as sites_router
 from app.subsites import router as subsites_router
+from app.licor import router as licor_router
+from app.licordataset import router as licordataset_router
 from app.fieldcampaigns import router as field_campaigns_router
 
 app = FastAPI()
@@ -71,4 +73,14 @@ app.include_router(
     field_campaigns_router,
     prefix=f"{config.API_PREFIX}/fieldcampaigns",
     tags=["fieldcampaigns"],
+)
+app.include_router(
+    licor_router,
+    prefix=f"{config.API_PREFIX}/licor",
+    tags=["LICOR"],
+)
+app.include_router(
+    licordataset_router,
+    prefix=f"{config.API_PREFIX}/licordataset",
+    tags=["LICOR", "Dataset"],
 )
